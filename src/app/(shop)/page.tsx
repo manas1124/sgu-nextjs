@@ -47,7 +47,7 @@ export default async function HomePage() {
           ))}
         </div>
 
-        {/* Center hero */}
+        {/* Center  hero */}
         <div className="bg-black text-white flex flex-col items-center
                         justify-center text-center px-12 py-16 relative overflow-hidden">
           <div className="absolute -top-20 -left-20 w-80 h-80 border border-white/5 rounded-full pointer-events-none" />
