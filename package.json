@@ -18,10 +18,17 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.27",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
-    "tailwindcss": "^4",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.2",
     "typescript": "^5"
-  }
+  },
+  "description": "**SGU-NEXTJS** là một hệ thống thương mại điện tử hoàn chỉnh được xây dựng trên nền tảng **Next.js 16 (App Router)**. Dự án tập trung vào việc tối ưu hóa hiệu năng hiển thị, trải nghiệm người dùng (UX/UX) và khả năng tìm kiếm (SEO).\r Đây là đồ án thực hành cho học phần **Các Công nghệ Lập trình Hiện đại** tại trường Đại học Sài Gòn.",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
