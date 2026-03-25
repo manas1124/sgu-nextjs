@@ -6,7 +6,6 @@ export const NAV_LINKS = [
   { label: 'Home',     href: '/' },
   { label: 'Shop',     href: '/shop' },
   { label: 'Products', href: '/products/1' },
-  { label: 'Pages',    href: '#' },
 ];
 
 export const FOOTER_LINKS = [

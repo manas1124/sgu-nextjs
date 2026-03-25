@@ -17,22 +17,55 @@ import RelatedProducts from '@/components/product/RelatedProducts';
 import Newsletter from '@/components/common/Newsletter';
 import Footer from '@/components/layout/Footer';
 import { MOCK_PRODUCTS, RELATED_PRODUCTS } from '@/constants/mockData';
+import { getProductById, getAllProductIds, getAllProducts } from '@/services/productService';
 
+type ProductPageProps = {
+  params: Promise<{ id: string }>;
+};
 export async function generateStaticParams() {
-  return MOCK_PRODUCTS.map(p => ({ id: p.id }));
+  // Lấy toàn bộ ID từ MockAPI để build tĩnh
+  const ids = await getAllProductIds();
+  return ids.map(id => ({ id }));
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const product = MOCK_PRODUCTS.find(p => p.id === params.id);
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+  // Lấy chi tiết sản phẩm từ API
+  const resolvedParams = await params;
+  const product = await getProductById(resolvedParams.id);
+  
   if (!product) return { title: 'Not Found' };
-  return { title: product.name };
+  
+  return { 
+    title: `${product.name} | Your Store`,
+    description: product.description || `Buy ${product.name} at the best price.`,
+  };
 }
+// export async function generateStaticParams() {
+//   return MOCK_PRODUCTS.map(p => ({ id: p.id }));
+// }
 
-export default function ProductPage({ params }: { params: { id: string } }) {
-  const product = MOCK_PRODUCTS.find(p => p.id === params.id) ?? MOCK_PRODUCTS[0];
+// export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+//   const product = MOCK_PRODUCTS.find(p => p.id === params.id);
+//   if (!product) return { title: 'Not Found' };
+//   return { title: product.name };
+// }
+
+
+
+export default async function ProductPage({ params }: ProductPageProps) {
+  // const product = MOCK_PRODUCTS.find(p => p.id === params.id) ?? MOCK_PRODUCTS[0];
+
+  const resolvedParams = await params;
+  const product = await getProductById(resolvedParams.id);
+
   if (!product) notFound();
 
   const images = product.images ?? [product.image];
+
+  const allProducts = await getAllProducts();
+  const relatedProducts = allProducts
+    .filter(p => p.id !== product.id)
+    .slice(0, 4);
 
   return (
     <>
@@ -114,7 +147,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         </div>
 
         {/* Related products */}
-        <RelatedProducts products={RELATED_PRODUCTS} />
+        <RelatedProducts products={relatedProducts} />
       </main>
 
       <FeaturesStrip />

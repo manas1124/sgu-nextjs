@@ -15,9 +15,16 @@ interface Filters {
 interface FilterSidebarProps {
   filters:   Filters;
   onChange: (filters: Filters) => void;
+  availableSizes: string[];
+  availableColors: string[];
 }
 
-export default function FilterSidebar({ filters, onChange }: FilterSidebarProps) {
+export default function FilterSidebar({ 
+  filters, 
+  onChange, 
+  availableSizes, 
+  availableColors 
+}: FilterSidebarProps) {
   const [brandsOpen, setBrandsOpen]   = useState(true);
   const [collectOpen, setCollectOpen] = useState(true);
 
@@ -46,7 +53,7 @@ export default function FilterSidebar({ filters, onChange }: FilterSidebarProps)
           Size
         </p>
         <div className="flex flex-wrap gap-2">
-          {FILTER_SIZES.map(s => (
+          {availableSizes.map(s => (
             <button
               key={s}
               onClick={() => toggleSize(s)}
@@ -67,7 +74,7 @@ export default function FilterSidebar({ filters, onChange }: FilterSidebarProps)
           Colors
         </p>
         <div className="flex flex-wrap gap-1.5">
-          {FILTER_COLORS.map(c => (
+          {availableColors.map(c => (
             <button
               key={c}
               onClick={() => setColor(c)}

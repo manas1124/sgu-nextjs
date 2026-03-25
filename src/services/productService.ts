@@ -23,6 +23,26 @@ const ENDPOINT = `${BASE_URL}/products`;
 // MockAPI trả về kiểu any, cần map sang type an toàn
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapProduct(raw: any): Product {
+
+  const idNum = parseInt(raw.id) || Math.floor(Math.random() * 10);
+
+  const ALL_SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
+  const ALL_COLORS = [
+    { label: 'Black', hex: '#000000' },
+    { label: 'White', hex: '#ffffff' },
+    { label: 'Red', hex: '#ff0000' },
+    { label: 'Blue', hex: '#0000ff' },
+    { label: 'Beige', hex: '#f5f5dc' },
+    { label: 'Green', hex: '#008000' }
+  ];
+
+  // Gán cho mỗi sản phẩm 2-3 size và 2 màu khác nhau dựa vào ID
+  const mockSizes = ALL_SIZES.slice(idNum % 3, (idNum % 3) + 3); 
+  const mockColors = [
+    ALL_COLORS[idNum % ALL_COLORS.length],
+    ALL_COLORS[(idNum + 1) % ALL_COLORS.length]
+  ];
+
   return {
     id:            String(raw.id),
     name:          raw.name         ?? 'Unnamed Product',
@@ -31,7 +51,14 @@ function mapProduct(raw: any): Product {
     originalPrice: raw.originalPrice ? Number(raw.originalPrice) : undefined,
     discount:      raw.discount      ? Number(raw.discount)      : undefined,
     image:         raw.image         ?? 'https://picsum.photos/seed/default/600/800',
-    images:        Array.isArray(raw.images) ? raw.images : undefined,
+    images:        Array.isArray(raw.images) ? raw.images : [
+      raw.image,
+      'https://picsum.photos/seed/product-2/600/720',
+      'https://picsum.photos/seed/product-3/600/720',
+      'https://picsum.photos/seed/product-4/600/720',
+      'https://picsum.photos/seed/product-5/600/720',
+      'https://picsum.photos/seed/product-6/600/720',
+    ],
     category:      raw.category      ?? 'Uncategorized',
     rating:        Number(raw.rating)        || 0,
     reviewCount:   Number(raw.reviewCount)   || 0,
@@ -41,6 +68,19 @@ function mapProduct(raw: any): Product {
     isSale:        Boolean(raw.isSale),
     brand:         raw.brand         ?? undefined,
     tags:          Array.isArray(raw.tags) ? raw.tags : undefined,
+
+    sizes: Array.isArray(raw.sizes) ? raw.sizes.map(String) : mockSizes,
+    
+    colors: Array.isArray(raw.colors)
+      ? raw.colors.map((c: any) => ({
+          label: c?.label ? String(c.label) : 'Unknown',
+          hex:   c?.hex   ? String(c.hex)   : '#000000'
+        }))
+      : mockColors,
+
+    specs: (raw.specs && typeof raw.specs === 'object' && !Array.isArray(raw.specs))
+      ? raw.specs
+      : undefined,
   };
 }
 
@@ -102,64 +142,4 @@ export async function getAllProductIds(): Promise<string[]> {
   const data = await res.json();
   if (!Array.isArray(data)) return [];
   return data.map((p: { id: string | number }) => String(p.id));
-}
-
-// ── POST: Thêm sản phẩm mới (Admin) ─────────────────────────
-// Dùng ở: admin/products/new — Server Action hoặc Route Handler
-// Không cache — mutation cần fresh response
-export async function createProduct(
-  data: Omit<Product, 'id'>
-): Promise<Product | null> {
-  const res = await fetch(ENDPOINT, {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify(data),
-    cache:   'no-store',
-  });
-
-  if (!res.ok) {
-    console.error(`[productService] createProduct failed: ${res.status}`);
-    return null;
-  }
-
-  const raw = await res.json();
-  return mapProduct(raw);
-}
-
-// ── PUT: Cập nhật sản phẩm (Admin) ──────────────────────────
-// Dùng ở: admin/products/[id]/edit
-export async function updateProduct(
-  id: string,
-  data: Partial<Omit<Product, 'id'>>
-): Promise<Product | null> {
-  const res = await fetch(`${ENDPOINT}/${id}`, {
-    method:  'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify(data),
-    cache:   'no-store',
-  });
-
-  if (!res.ok) {
-    console.error(`[productService] updateProduct(${id}) failed: ${res.status}`);
-    return null;
-  }
-
-  const raw = await res.json();
-  return mapProduct(raw);
-}
-
-// ── DELETE: Xóa sản phẩm (Admin) ────────────────────────────
-// Dùng ở: Admin product table — DeleteButton component
-export async function deleteProduct(id: string): Promise<boolean> {
-  const res = await fetch(`${ENDPOINT}/${id}`, {
-    method: 'DELETE',
-    cache:  'no-store',
-  });
-
-  if (!res.ok) {
-    console.error(`[productService] deleteProduct(${id}) failed: ${res.status}`);
-    return false;
-  }
-
-  return true;
 }
