@@ -1,7 +1,7 @@
 // src/app/layout.tsx
 import type { Metadata } from 'next';
 import { CartProvider } from '@/context/CartContext';
-import "../globals.css';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: { default: 'FASCO', template: '%s | FASCO' },
