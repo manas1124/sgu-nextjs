@@ -103,3 +103,63 @@ export async function getAllProductIds(): Promise<string[]> {
   if (!Array.isArray(data)) return [];
   return data.map((p: { id: string | number }) => String(p.id));
 }
+
+// ── POST: Thêm sản phẩm mới (Admin) ─────────────────────────
+// Dùng ở: admin/products/new — Server Action hoặc Route Handler
+// Không cache — mutation cần fresh response
+export async function createProduct(
+  data: Omit<Product, 'id'>
+): Promise<Product | null> {
+  const res = await fetch(ENDPOINT, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(data),
+    cache:   'no-store',
+  });
+
+  if (!res.ok) {
+    console.error(`[productService] createProduct failed: ${res.status}`);
+    return null;
+  }
+
+  const raw = await res.json();
+  return mapProduct(raw);
+}
+
+// ── PUT: Cập nhật sản phẩm (Admin) ──────────────────────────
+// Dùng ở: admin/products/[id]/edit
+export async function updateProduct(
+  id: string,
+  data: Partial<Omit<Product, 'id'>>
+): Promise<Product | null> {
+  const res = await fetch(`${ENDPOINT}/${id}`, {
+    method:  'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(data),
+    cache:   'no-store',
+  });
+
+  if (!res.ok) {
+    console.error(`[productService] updateProduct(${id}) failed: ${res.status}`);
+    return null;
+  }
+
+  const raw = await res.json();
+  return mapProduct(raw);
+}
+
+// ── DELETE: Xóa sản phẩm (Admin) ────────────────────────────
+// Dùng ở: Admin product table — DeleteButton component
+export async function deleteProduct(id: string): Promise<boolean> {
+  const res = await fetch(`${ENDPOINT}/${id}`, {
+    method: 'DELETE',
+    cache:  'no-store',
+  });
+
+  if (!res.ok) {
+    console.error(`[productService] deleteProduct(${id}) failed: ${res.status}`);
+    return false;
+  }
+
+  return true;
+}
