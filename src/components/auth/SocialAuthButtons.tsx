@@ -20,18 +20,14 @@ export default function SocialAuthButtons() {
     <div className="flex gap-3">
       <button
         type="button"
-        className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4
-                   border border-gray-300 text-sm font-medium hover:bg-gray-50
-                   transition-colors"
+        className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-300 text-sm font-medium hover:bg-gray-50 transition-colors"
       >
         <GoogleIcon />
         Sign up with Google
       </button>
       <button
         type="button"
-        className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4
-                   border border-gray-300 text-sm font-medium hover:bg-gray-50
-                   transition-colors"
+        className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 border border-gray-300 text-sm font-medium hover:bg-gray-50 transition-colors"
       >
         <GmailIcon />
         Sign up with Email
