@@ -38,7 +38,7 @@ export default function RelatedProducts({ products }: RelatedProductsProps) {
               <div className="relative aspect-[3/4] bg-gray-100 overflow-hidden">
                 <Image
                   src={p.image} alt={p.name}
-                  fill
+                  fill loading="lazy"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="200px"
                 />

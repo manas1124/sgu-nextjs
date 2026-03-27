@@ -27,7 +27,7 @@ export default function ProductImageGallery({
             className={`relative aspect-square overflow-hidden border-2 transition-colors
               ${active === i ? 'border-black' : 'border-transparent hover:border-gray-300'}`}
           >
-            <Image src={img} alt={`${name} ${i + 1}`} fill
+            <Image src={img} alt={`${name} ${i + 1}`} fill loading="lazy"
                    className="object-cover" sizes="64px" />
           </button>
         ))}

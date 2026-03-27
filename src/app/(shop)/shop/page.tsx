@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 export default async function ShopServerPage() {
-  // Fetch data trực tiếp trên server (sẽ dùng cache bạn đã setup)
+  // Fetch data trực tiếp trên server
   const products = await getAllProducts();
 
   // Truyền data xuống Client Component

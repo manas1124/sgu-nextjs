@@ -3,7 +3,6 @@
 // Client Components cho interactive parts
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import Breadcrumb from '@/components/common/Breadcrumb';
 import ProductImageGallery from '@/components/product/ProductImageGallery';
 import UrgencyBanner from '@/components/product/UrgencyBanner';
@@ -16,7 +15,6 @@ import FeaturesStrip from '@/components/common/FeaturesStrip';
 import RelatedProducts from '@/components/product/RelatedProducts';
 import Newsletter from '@/components/common/Newsletter';
 import Footer from '@/components/layout/Footer';
-import { MOCK_PRODUCTS, RELATED_PRODUCTS } from '@/constants/mockData';
 import { getProductById, getAllProductIds, getAllProducts } from '@/services/productService';
 
 type ProductPageProps = {
@@ -40,21 +38,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     description: product.description || `Buy ${product.name} at the best price.`,
   };
 }
-// export async function generateStaticParams() {
-//   return MOCK_PRODUCTS.map(p => ({ id: p.id }));
-// }
-
-// export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-//   const product = MOCK_PRODUCTS.find(p => p.id === params.id);
-//   if (!product) return { title: 'Not Found' };
-//   return { title: product.name };
-// }
-
-
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  // const product = MOCK_PRODUCTS.find(p => p.id === params.id) ?? MOCK_PRODUCTS[0];
-
   const resolvedParams = await params;
   const product = await getProductById(resolvedParams.id);
 
