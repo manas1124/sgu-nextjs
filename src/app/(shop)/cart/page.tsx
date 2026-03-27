@@ -1,5 +1,5 @@
 // src/app/(shop)/cart/page.tsx
-// Client Component — cần useCart
+// Client Component — cần  useCart
 'use client';
 import { Metadata } from 'next';
 import Link from 'next/link';
