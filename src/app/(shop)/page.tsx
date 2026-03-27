@@ -73,7 +73,7 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {/* Right cards */}
+        {/* Right  cards */}
         <div className="flex flex-col gap-4 p-5 border-l border-gray-100">
           {HERO_PRODUCTS.filter(p => p.side === 'right').map(p => (
             <div key={p.id} className="relative group cursor-pointer">
