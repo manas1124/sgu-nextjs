@@ -1,5 +1,5 @@
 // src/app/(shop)/layout.tsx
-// Layout chung cho tất cả trang shop
+// Layout chung cho tất cả trang  shop
 // Server Component — Navbar + MiniCart được inject ở đây
 
 import Navbar from '@/components/layout/Navbar';
