@@ -1,11 +1,14 @@
 // src/components/layout/Navbar.tsx
-// Server Component — NavIcons (Client) inject vào
+'use client'
 import Link from 'next/link';
 import { NAV_LINKS, SITE_NAME } from '@/constants';
 import NavIcons from './NavIcons';
-import MiniCart from '@/components/cart/MiniCart';
+import DynamicMiniCart from '@/components/cart/DynamicMiniCart';
+import { useCart } from '@/context/CartContext';
 
 export default function Navbar() {
+  const { isMiniCartOpen } = useCart();
+  
   return (
     <>
       <nav className="border-b border-gray-200 bg-white sticky top-0 z-30">
@@ -50,7 +53,9 @@ export default function Navbar() {
       </nav>
 
       {/* MiniCart drawer */}
-      <MiniCart />
+      {isMiniCartOpen && (
+        <DynamicMiniCart />
+      )}
     </>
   );
 }

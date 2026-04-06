@@ -1,17 +1,29 @@
 // src/components/common/Newsletter.tsx
 'use client';
-import { useState } from 'react';
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import Button from './Button';
+import { subscribeNewsletter } from '@/actions/newsletter';
+
+function SubmitButton({ isSuccess }: { isSuccess: boolean }) {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button 
+      type="submit" 
+      fullWidth 
+      size="lg" 
+      className="mt-2"
+      // Disable nút nếu đang gửi API hoặc đã gửi thành công
+      disabled={pending || isSuccess}
+    >
+      {pending ? 'ĐANG XỬ LÝ...' : (isSuccess ? '✓ Subscribed!' : 'Subscribe Now')}
+    </Button>
+  );
+}
 
 export default function Newsletter() {
-  const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setSent(true);
-    setEmail('');
-  }
+  const [state, formAction] = useActionState(subscribeNewsletter, null);
 
   return (
     <section className="relative overflow-hidden bg-gray-50 min-h-[420px] flex items-center">
@@ -34,20 +46,17 @@ export default function Newsletter() {
           duis ultrices sollicitudin aliquam sem.
         </p>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 max-w-sm mx-auto">
+        <form action={formAction} className="flex flex-col gap-3 max-w-sm mx-auto">
           <input
             type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            name="email"
             placeholder="michael@ymail.com"
             required
             className="w-full border-b border-gray-300 bg-transparent py-2 text-sm
                        outline-none placeholder-gray-400 focus:border-black
                        transition-colors text-center"
           />
-          <Button type="submit" fullWidth size="lg" className="mt-2">
-            {sent ? '✓ Subscribed!' : 'Subscribe Now'}
-          </Button>
+          <SubmitButton isSuccess={state?.success === true} />
         </form>
       </div>
     </section>

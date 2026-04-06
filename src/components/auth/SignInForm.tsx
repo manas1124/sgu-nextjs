@@ -1,20 +1,31 @@
 // src/components/auth/SignInForm.tsx
 'use client';
-import { useState } from 'react';
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import Link from 'next/link';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import SocialAuthButtons from './SocialAuthButtons';
 import AuthDivider from './AuthDivider';
+import { login } from '@/actions/auth';
 
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  
+  return (
+    <Button 
+      type="submit" 
+      fullWidth 
+      size="lg" 
+      className="mt-2"
+      disabled={pending}
+    >
+      {pending ? 'Signing in...' : 'Sign In'}
+    </Button>
+  );
+}
 export default function SignInForm() {
-  const [email, setEmail]       = useState('');
-  const [password, setPassword] = useState('');
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    // TODO: kết nối auth
-  }
+  const [state, formAction] = useActionState(login, null);
 
   return (
     <div>
@@ -23,25 +34,27 @@ export default function SignInForm() {
       <SocialAuthButtons />
       <AuthDivider />
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form action={formAction} className="space-y-5">
         <Input
           type="email"
+          name="email"
           placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
+          defaultValue="admin@fasco.com"
           required
         />
         <Input
           type="password"
+          name="password"
           placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
+          defaultValue="123456"
           required
         />
-
-        <Button type="submit" fullWidth size="lg" className="mt-2">
-          Sign In
-        </Button>
+        {state?.message && (
+          <p className="text-red-500 text-sm text-center font-medium animate-pulse">
+            {state.message}
+          </p>
+        )}
+        <SubmitButton />
       </form>
 
       <div className="mt-3 space-y-2.5">
