@@ -38,6 +38,24 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface DeliveryData {
+  country:   string;
+  firstName: string;
+  lastName:  string;
+  address:   string;
+  city:      string;
+  postal:    string;
+  saveInfo:  boolean;
+}
+
+export interface PaymentData {
+  cardNumber: string;
+  expiry:     string;
+  cvv:        string;
+  cardName:   string;
+  saveInfo:   boolean;
+}
+
 export interface NavLink {
   label: string;
   href: string;

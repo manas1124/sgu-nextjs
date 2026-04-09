@@ -1,7 +1,7 @@
 // src/components/common/StarRating.tsx
 
 interface StarRatingProps {
-  rating: number;   // 1–5, supports .5
+  rating: number;   // 0–5, supports any fraction (e.g. 4.5)
   count?: number;
   size?: 'sm' | 'md';
 }
@@ -13,14 +13,18 @@ export default function StarRating({ rating, count, size = 'sm' }: StarRatingPro
     <div className="flex items-center gap-1.5">
       <div className={`flex ${textSize}`}>
         {Array.from({ length: 5 }, (_, i) => {
-          const full  = i < Math.floor(rating);
-          const half  = !full && i < rating;
+          // fillLevel is 0..1 for this particular star
+          const fillLevel = Math.max(0, Math.min(1, rating - i));
           return (
-            <span
-              key={i}
-              className={full || half ? 'text-amber-400' : 'text-gray-200'}
-            >
-              {half ? '★' : '★'}
+            <span key={i} className="relative inline-block leading-none text-gray-200">
+              ★
+              <span
+                className="absolute left-0 top-0 overflow-hidden text-amber-400"
+                style={{ width: `${fillLevel * 100}%` }}
+                aria-hidden="true"
+              >
+                ★
+              </span>
             </span>
           );
         })}

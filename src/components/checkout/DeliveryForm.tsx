@@ -1,16 +1,8 @@
 // src/components/checkout/DeliveryForm.tsx
 'use client';
 import Input from '@/components/common/Input';
-
-interface DeliveryData {
-  country:    string;
-  firstName:  string;
-  lastName:   string;
-  address:    string;
-  city:       string;
-  postal:     string;
-  saveInfo:   boolean;
-}
+import SaveInfoCheckbox from './SaveInfoCheckbox';
+import { DeliveryData } from '@/types';
 
 interface DeliveryFormProps {
   data:     DeliveryData;
@@ -33,6 +25,7 @@ export default function DeliveryForm({ data, onChange }: DeliveryFormProps) {
         <select
           value={data.country}
           onChange={set('country')}
+          required
           className="w-full border border-gray-200 px-4 py-3 text-sm bg-white
                      outline-none focus:border-black transition-colors appearance-none"
         >
@@ -49,6 +42,7 @@ export default function DeliveryForm({ data, onChange }: DeliveryFormProps) {
             placeholder="First Name"
             value={data.firstName}
             onChange={set('firstName')}
+            autoComplete="given-name"
             required
           />
           <Input
@@ -56,6 +50,8 @@ export default function DeliveryForm({ data, onChange }: DeliveryFormProps) {
             placeholder="Last Name"
             value={data.lastName}
             onChange={set('lastName')}
+            autoComplete="family-name"
+            required
           />
         </div>
 
@@ -65,6 +61,7 @@ export default function DeliveryForm({ data, onChange }: DeliveryFormProps) {
           placeholder="Address"
           value={data.address}
           onChange={set('address')}
+          autoComplete="street-address"
           required
         />
 
@@ -75,25 +72,23 @@ export default function DeliveryForm({ data, onChange }: DeliveryFormProps) {
             placeholder="City"
             value={data.city}
             onChange={set('city')}
+            autoComplete="address-level2"
+            required
           />
           <Input
             variant="bordered"
             placeholder="Postal Code"
             value={data.postal}
             onChange={set('postal')}
+            autoComplete="postal-code"
+            required
           />
         </div>
 
-        {/* Save checkbox */}
-        <label className="flex items-center gap-2.5 cursor-pointer mt-1">
-          <input
-            type="checkbox"
-            checked={data.saveInfo}
-            onChange={e => onChange({ ...data, saveInfo: e.target.checked })}
-            className="w-4 h-4 border-2 border-gray-300 accent-black cursor-pointer"
-          />
-          <span className="text-sm text-gray-600">Save This Info For Future</span>
-        </label>
+        <SaveInfoCheckbox
+          checked={data.saveInfo}
+          onChange={(checked) => onChange({ ...data, saveInfo: checked })}
+        />
       </div>
     </section>
   );

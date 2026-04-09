@@ -1,6 +1,6 @@
 // src/context/CartContext.tsx
 'use client';
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, ReactNode } from 'react';
 import { CartItem } from '@/types';
 
 interface CartContextType {
@@ -18,15 +18,41 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | null>(null);
 
+const STORAGE_KEY = 'fasco-cart';
+
+const DEFAULT_ITEMS: CartItem[] = [
+  {
+    id: '1', name: 'Mini Dress With Ruffled Straps',
+    price: 14.9, image: 'https://picsum.photos/seed/cart-dress/200/260',
+    color: 'Red', size: 'M', quantity: 1,
+  },
+];
+
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([
-    {
-      id: '1', name: 'Mini Dress With Ruffled Straps',
-      price: 14.9, image: 'https://picsum.photos/seed/cart-dress/200/260',
-      color: 'Red', size: 'M', quantity: 1,
-    },
-  ]);
+  const [items, setItems] = useState<CartItem[]>(DEFAULT_ITEMS);
+  const [isHydrated, setIsHydrated] = useState(false);
   const [isMiniCartOpen, setIsMiniCartOpen] = useState(false);
+
+  // Load from localStorage on mount (client-only)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) setItems(JSON.parse(saved));
+    } catch (err) {
+      console.warn('[CartContext] failed to read cart from storage', err);
+    }
+    setIsHydrated(true);
+  }, []);
+
+  // Persist to localStorage after hydration
+  useEffect(() => {
+    if (!isHydrated) return;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    } catch (err) {
+      console.warn('[CartContext] failed to persist cart to storage', err);
+    }
+  }, [items, isHydrated]);
 
   const addItem = useCallback((item: Omit<CartItem, 'quantity'>) => {
     setItems(prev => {
@@ -46,14 +72,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const openMiniCart  = useCallback(() => setIsMiniCartOpen(true), []);
   const closeMiniCart = useCallback(() => setIsMiniCartOpen(false), []);
 
-  const totalItems = items.reduce((s, i) => s + i.quantity, 0);
-  const totalPrice = items.reduce((s, i) => s + i.price * i.quantity, 0);
+  const totalItems = useMemo(
+    () => items.reduce((s, i) => s + i.quantity, 0),
+    [items],
+  );
+  const totalPrice = useMemo(
+    () => items.reduce((s, i) => s + i.price * i.quantity, 0),
+    [items],
+  );
+
+  const value = useMemo<CartContextType>(() => ({
+    items, addItem, removeItem, updateQty, clearCart,
+    totalItems, totalPrice, isMiniCartOpen, openMiniCart, closeMiniCart,
+  }), [
+    items, addItem, removeItem, updateQty, clearCart,
+    totalItems, totalPrice, isMiniCartOpen, openMiniCart, closeMiniCart,
+  ]);
 
   return (
-    <CartContext.Provider value={{
-      items, addItem, removeItem, updateQty, clearCart,
-      totalItems, totalPrice, isMiniCartOpen, openMiniCart, closeMiniCart,
-    }}>
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );

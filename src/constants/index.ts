@@ -58,3 +58,9 @@ export const SORT_OPTIONS   = ['Best selling', 'Price: Low to High', 'Price: Hig
 export const FREE_SHIPPING_THRESHOLD = 150;
 export const GIFT_WRAP_PRICE = 10;
 export const SHIPPING_COST = 40;
+
+// Demo discount codes — code -> percent off (0..1)
+export const DISCOUNT_CODES: Record<string, number> = {
+  SAVE10: 0.10,
+  SAVE20: 0.20,
+};

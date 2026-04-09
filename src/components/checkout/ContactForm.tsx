@@ -16,7 +16,7 @@ export default function ContactForm({ email, onChange }: ContactFormProps) {
         <p className="text-sm text-gray-500">
           Have an account?{' '}
           <Link href="/sign-in" className="text-blue-600 hover:underline">
-            Create Account
+            Sign In
           </Link>
         </p>
       </div>

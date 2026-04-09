@@ -1,14 +1,19 @@
 // src/components/cart/MiniCart.tsx
 'use client';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import MiniCartItem from './MiniCartItem';
 import GiftWrapOption from './GiftWrapOption';
 import Button from '@/components/common/Button';
-import { FREE_SHIPPING_THRESHOLD } from '@/constants';
+import { FREE_SHIPPING_THRESHOLD, GIFT_WRAP_PRICE } from '@/constants';
+import { formatPrice } from '@/lib/format';
 
 export default function MiniCart() {
   const { items, updateQty, totalPrice, isMiniCartOpen, closeMiniCart } = useCart();
+
+  const [giftWrap, setGiftWrap] = useState(false);
+  const subtotal = totalPrice + (giftWrap ? GIFT_WRAP_PRICE : 0);
 
   const remaining = FREE_SHIPPING_THRESHOLD - totalPrice;
 
@@ -34,7 +39,7 @@ export default function MiniCart() {
             {remaining > 0 ? (
               <p className="text-sm text-gray-600 mt-1">
                 Buy{' '}
-                <strong className="text-black">${remaining.toFixed(2)}</strong>
+                <strong className="text-black">{formatPrice(remaining)}</strong>
                 {' '}More And Get{' '}
                 <strong className="text-black">Free Shipping</strong>
               </p>
@@ -77,14 +82,14 @@ export default function MiniCart() {
         {/* Footer */}
         {items.length > 0 && (
           <div className="px-6 py-5 border-t border-gray-100 space-y-3">
-            <GiftWrapOption />
+            <GiftWrapOption checked={giftWrap} onChange={setGiftWrap} />
 
             <div className="flex justify-between items-center py-2">
               <span className="text-sm font-semibold uppercase tracking-widest">
                 Subtotal
               </span>
               <span className="font-bold text-base">
-                ${totalPrice.toFixed(2)}
+                {formatPrice(subtotal)}
               </span>
             </div>
 
