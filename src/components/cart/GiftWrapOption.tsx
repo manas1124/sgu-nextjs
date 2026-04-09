@@ -1,6 +1,7 @@
 // src/components/cart/GiftWrapOption.tsx
 'use client';
 import { GIFT_WRAP_PRICE } from '@/constants';
+import { formatPrice } from '@/lib/format';
 
 interface GiftWrapOptionProps {
   checked: boolean;
@@ -18,7 +19,7 @@ export default function GiftWrapOption({ checked, onChange }: GiftWrapOptionProp
       />
       <span className="text-sm text-gray-600">
         For{' '}
-        <strong className="text-black">${GIFT_WRAP_PRICE.toFixed(2)}</strong>
+        <strong className="text-black">{formatPrice(GIFT_WRAP_PRICE)}</strong>
         {' '}Please Wrap The Product
       </span>
     </label>

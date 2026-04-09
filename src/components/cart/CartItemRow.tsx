@@ -2,6 +2,7 @@
 'use client';
 import Image from 'next/image';
 import { CartItem } from '@/types';
+import { formatPrice } from '@/lib/format';
 import QuantityControl from './QuantityControl';
 
 interface CartItemRowProps {
@@ -41,7 +42,7 @@ export default function CartItemRow({ item, onRemove, onUpdateQty }: CartItemRow
       </div>
 
       {/* Unit price */}
-      <span className="text-sm font-medium">${item.price.toFixed(2)}</span>
+      <span className="text-sm font-medium">{formatPrice(item.price)}</span>
 
       {/* Quantity */}
       <QuantityControl
@@ -53,7 +54,7 @@ export default function CartItemRow({ item, onRemove, onUpdateQty }: CartItemRow
 
       {/* Total */}
       <span className="text-sm font-semibold text-right">
-        ${(item.price * item.quantity).toFixed(2)}
+        {formatPrice(item.price * item.quantity)}
       </span>
     </div>
   );

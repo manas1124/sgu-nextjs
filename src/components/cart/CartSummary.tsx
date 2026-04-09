@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Button from '@/components/common/Button';
 import GiftWrapOption from './GiftWrapOption';
 import { GIFT_WRAP_PRICE } from '@/constants';
+import { formatPrice } from '@/lib/format';
 import { useState } from 'react';
 
 interface CartSummaryProps {
@@ -20,7 +21,7 @@ export default function CartSummary({ totalPrice }: CartSummaryProps) {
 
       <div className="flex justify-between items-center py-4 border-b border-gray-100">
         <span className="font-semibold text-sm uppercase tracking-widest">Subtotal</span>
-        <span className="font-bold text-base">${subtotal.toFixed(2)}</span>
+        <span className="font-bold text-base">{formatPrice(subtotal)}</span>
       </div>
 
       <div className="mt-4 space-y-3">

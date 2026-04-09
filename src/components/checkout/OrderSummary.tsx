@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { CartItem } from '@/types';
 import { SHIPPING_COST } from '@/constants';
+import { formatPrice } from '@/lib/format';
 
 interface OrderSummaryProps {
   items:      CartItem[];
@@ -69,7 +70,7 @@ export default function OrderSummary({ items, totalPrice }: OrderSummaryProps) {
               )}
             </div>
             <span className="text-xs font-bold flex-shrink-0">
-              ${(item.price * item.quantity).toFixed(2)}
+              {formatPrice(item.price * item.quantity)}
             </span>
           </div>
         ))}
@@ -116,21 +117,21 @@ export default function OrderSummary({ items, totalPrice }: OrderSummaryProps) {
       <div className="space-y-2.5 border-t border-gray-200 pt-4">
         <div className="flex justify-between text-sm">
           <span className="text-gray-600">Subtotal</span>
-          <span className="font-medium">${totalPrice.toFixed(2)}</span>
+          <span className="font-medium">{formatPrice(totalPrice)}</span>
         </div>
         {appliedCode && (
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">Discount ({appliedCode})</span>
-            <span className="font-medium text-green-600">−${discountAmount.toFixed(2)}</span>
+            <span className="font-medium text-green-600">−{formatPrice(discountAmount)}</span>
           </div>
         )}
         <div className="flex justify-between text-sm">
           <span className="text-gray-600">Shipping</span>
-          <span className="font-medium">${SHIPPING_COST.toFixed(2)}</span>
+          <span className="font-medium">{formatPrice(SHIPPING_COST)}</span>
         </div>
         <div className="flex justify-between font-bold text-base pt-3 border-t border-gray-200">
           <span>Total</span>
-          <span>${total.toFixed(2)}</span>
+          <span>{formatPrice(total)}</span>
         </div>
       </div>
     </aside>

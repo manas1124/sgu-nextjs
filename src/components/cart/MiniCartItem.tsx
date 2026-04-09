@@ -2,6 +2,7 @@
 'use client';
 import Image from 'next/image';
 import { CartItem } from '@/types';
+import { formatPrice } from '@/lib/format';
 import QuantityControl from './QuantityControl';
 
 interface MiniCartItemProps {
@@ -34,7 +35,7 @@ export default function MiniCartItem({ item, onUpdateQty }: MiniCartItemProps) {
           <p className="text-xs text-gray-500 mb-2">Color : {item.color}</p>
         )}
         <p className="text-sm font-bold mb-3">
-          ${(item.price * item.quantity).toFixed(2)}
+          {formatPrice(item.price * item.quantity)}
         </p>
         <QuantityControl
           quantity={item.quantity}
