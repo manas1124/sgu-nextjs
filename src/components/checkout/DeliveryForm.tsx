@@ -1,6 +1,7 @@
 // src/components/checkout/DeliveryForm.tsx
 'use client';
 import Input from '@/components/common/Input';
+import SaveInfoCheckbox from './SaveInfoCheckbox';
 import { DeliveryData } from '@/types';
 
 interface DeliveryFormProps {
@@ -84,16 +85,10 @@ export default function DeliveryForm({ data, onChange }: DeliveryFormProps) {
           />
         </div>
 
-        {/* Save checkbox */}
-        <label className="flex items-center gap-2.5 cursor-pointer mt-1">
-          <input
-            type="checkbox"
-            checked={data.saveInfo}
-            onChange={e => onChange({ ...data, saveInfo: e.target.checked })}
-            className="w-4 h-4 border-2 border-gray-300 accent-black cursor-pointer"
-          />
-          <span className="text-sm text-gray-600">Save This Info For Future</span>
-        </label>
+        <SaveInfoCheckbox
+          checked={data.saveInfo}
+          onChange={(checked) => onChange({ ...data, saveInfo: checked })}
+        />
       </div>
     </section>
   );
