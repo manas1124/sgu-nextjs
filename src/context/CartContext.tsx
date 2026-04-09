@@ -38,8 +38,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) setItems(JSON.parse(saved));
-    } catch {
-      // ignore corrupted storage
+    } catch (err) {
+      console.warn('[CartContext] failed to read cart from storage', err);
     }
     setIsHydrated(true);
   }, []);
@@ -49,8 +49,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (!isHydrated) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    } catch {
-      // quota / private mode — silently ignore
+    } catch (err) {
+      console.warn('[CartContext] failed to persist cart to storage', err);
     }
   }, [items, isHydrated]);
 
