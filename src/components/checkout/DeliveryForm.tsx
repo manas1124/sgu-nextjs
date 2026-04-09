@@ -1,16 +1,7 @@
 // src/components/checkout/DeliveryForm.tsx
 'use client';
 import Input from '@/components/common/Input';
-
-interface DeliveryData {
-  country:    string;
-  firstName:  string;
-  lastName:   string;
-  address:    string;
-  city:       string;
-  postal:     string;
-  saveInfo:   boolean;
-}
+import { DeliveryData } from '@/types';
 
 interface DeliveryFormProps {
   data:     DeliveryData;

@@ -1,14 +1,7 @@
 // src/components/checkout/PaymentForm.tsx
 'use client';
 import Input from '@/components/common/Input';
-
-interface PaymentData {
-  cardNumber: string;
-  expiry:     string;
-  cvv:        string;
-  cardName:   string;
-  saveInfo:   boolean;
-}
+import { PaymentData } from '@/types';
 
 interface PaymentFormProps {
   data:     PaymentData;
