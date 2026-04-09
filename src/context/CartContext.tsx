@@ -1,6 +1,6 @@
 // src/context/CartContext.tsx
 'use client';
-import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, ReactNode } from 'react';
 import { CartItem } from '@/types';
 
 interface CartContextType {
@@ -72,14 +72,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const openMiniCart  = useCallback(() => setIsMiniCartOpen(true), []);
   const closeMiniCart = useCallback(() => setIsMiniCartOpen(false), []);
 
-  const totalItems = items.reduce((s, i) => s + i.quantity, 0);
-  const totalPrice = items.reduce((s, i) => s + i.price * i.quantity, 0);
+  const totalItems = useMemo(
+    () => items.reduce((s, i) => s + i.quantity, 0),
+    [items],
+  );
+  const totalPrice = useMemo(
+    () => items.reduce((s, i) => s + i.price * i.quantity, 0),
+    [items],
+  );
+
+  const value = useMemo<CartContextType>(() => ({
+    items, addItem, removeItem, updateQty, clearCart,
+    totalItems, totalPrice, isMiniCartOpen, openMiniCart, closeMiniCart,
+  }), [
+    items, addItem, removeItem, updateQty, clearCart,
+    totalItems, totalPrice, isMiniCartOpen, openMiniCart, closeMiniCart,
+  ]);
 
   return (
-    <CartContext.Provider value={{
-      items, addItem, removeItem, updateQty, clearCart,
-      totalItems, totalPrice, isMiniCartOpen, openMiniCart, closeMiniCart,
-    }}>
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );
