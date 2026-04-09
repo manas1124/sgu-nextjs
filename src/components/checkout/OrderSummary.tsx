@@ -3,19 +3,13 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { CartItem } from '@/types';
-import { SHIPPING_COST } from '@/constants';
+import { SHIPPING_COST, DISCOUNT_CODES } from '@/constants';
 import { formatPrice } from '@/lib/format';
 
 interface OrderSummaryProps {
   items:      CartItem[];
   totalPrice: number;
 }
-
-// Demo discount codes: code -> percent off
-const DISCOUNT_CODES: Record<string, number> = {
-  SAVE10: 0.10,
-  SAVE20: 0.20,
-};
 
 export default function OrderSummary({ items, totalPrice }: OrderSummaryProps) {
   const [discountInput, setDiscountInput] = useState('');
