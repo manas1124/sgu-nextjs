@@ -1,6 +1,6 @@
 // src/context/CartContext.tsx
 'use client';
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { CartItem } from '@/types';
 
 interface CartContextType {
@@ -18,15 +18,41 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | null>(null);
 
+const STORAGE_KEY = 'fasco-cart';
+
+const DEFAULT_ITEMS: CartItem[] = [
+  {
+    id: '1', name: 'Mini Dress With Ruffled Straps',
+    price: 14.9, image: 'https://picsum.photos/seed/cart-dress/200/260',
+    color: 'Red', size: 'M', quantity: 1,
+  },
+];
+
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([
-    {
-      id: '1', name: 'Mini Dress With Ruffled Straps',
-      price: 14.9, image: 'https://picsum.photos/seed/cart-dress/200/260',
-      color: 'Red', size: 'M', quantity: 1,
-    },
-  ]);
+  const [items, setItems] = useState<CartItem[]>(DEFAULT_ITEMS);
+  const [isHydrated, setIsHydrated] = useState(false);
   const [isMiniCartOpen, setIsMiniCartOpen] = useState(false);
+
+  // Load from localStorage on mount (client-only)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) setItems(JSON.parse(saved));
+    } catch {
+      // ignore corrupted storage
+    }
+    setIsHydrated(true);
+  }, []);
+
+  // Persist to localStorage after hydration
+  useEffect(() => {
+    if (!isHydrated) return;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    } catch {
+      // quota / private mode — silently ignore
+    }
+  }, [items, isHydrated]);
 
   const addItem = useCallback((item: Omit<CartItem, 'quantity'>) => {
     setItems(prev => {
