@@ -31,14 +31,20 @@ export default function Button({
   children,
   ...props
 }: ButtonProps) {
-  const base = `inline-flex items-center justify-center font-semibold
-                tracking-widest uppercase transition-colors duration-200
-                ${variants[variant]} ${sizes[size]}
-                ${fullWidth ? 'w-full' : ''} ${className}`;
+  const base = [
+    'inline-flex items-center justify-center font-semibold tracking-widest uppercase transition-colors duration-200',
+    variants[variant],
+    sizes[size],
+    fullWidth ? 'w-full' : '',
+    className,
+  ].filter(Boolean).join(' ');
 
   if (href) {
+    // Forward onClick (and other compatible handlers) to the Link so behaviors
+    // like closing a drawer before navigating still fire.
+    const { onClick } = props as { onClick?: (e: any) => void };
     return (
-      <Link href={href} className={base}>
+      <Link href={href} className={base} onClick={onClick}>
         {children}
       </Link>
     );
