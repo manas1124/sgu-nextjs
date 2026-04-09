@@ -16,7 +16,7 @@ export default function CartSummary({ totalPrice }: CartSummaryProps) {
 
   return (
     <div className="mt-8 ml-auto w-full max-w-sm">
-      <GiftWrapOption onChange={setGiftWrap} />
+      <GiftWrapOption checked={giftWrap} onChange={setGiftWrap} />
 
       <div className="flex justify-between items-center py-4 border-b border-gray-100">
         <span className="font-semibold text-sm uppercase tracking-widest">Subtotal</span>
@@ -32,7 +32,7 @@ export default function CartSummary({ totalPrice }: CartSummaryProps) {
           className="block w-full text-center text-sm font-semibold underline
                      underline-offset-2 hover:opacity-60 transition-opacity"
         >
-          View Cart
+          Continue Shopping
         </Link>
       </div>
     </div>
