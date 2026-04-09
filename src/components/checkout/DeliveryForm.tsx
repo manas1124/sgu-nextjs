@@ -33,6 +33,7 @@ export default function DeliveryForm({ data, onChange }: DeliveryFormProps) {
         <select
           value={data.country}
           onChange={set('country')}
+          required
           className="w-full border border-gray-200 px-4 py-3 text-sm bg-white
                      outline-none focus:border-black transition-colors appearance-none"
         >
@@ -49,6 +50,7 @@ export default function DeliveryForm({ data, onChange }: DeliveryFormProps) {
             placeholder="First Name"
             value={data.firstName}
             onChange={set('firstName')}
+            autoComplete="given-name"
             required
           />
           <Input
@@ -56,6 +58,8 @@ export default function DeliveryForm({ data, onChange }: DeliveryFormProps) {
             placeholder="Last Name"
             value={data.lastName}
             onChange={set('lastName')}
+            autoComplete="family-name"
+            required
           />
         </div>
 
@@ -65,6 +69,7 @@ export default function DeliveryForm({ data, onChange }: DeliveryFormProps) {
           placeholder="Address"
           value={data.address}
           onChange={set('address')}
+          autoComplete="street-address"
           required
         />
 
@@ -75,12 +80,16 @@ export default function DeliveryForm({ data, onChange }: DeliveryFormProps) {
             placeholder="City"
             value={data.city}
             onChange={set('city')}
+            autoComplete="address-level2"
+            required
           />
           <Input
             variant="bordered"
             placeholder="Postal Code"
             value={data.postal}
             onChange={set('postal')}
+            autoComplete="postal-code"
+            required
           />
         </div>
 

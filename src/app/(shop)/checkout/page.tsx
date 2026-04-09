@@ -2,6 +2,7 @@
 // Client Component — state cho tất cả form fields
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import ContactForm from '@/components/checkout/ContactForm';
 import DeliveryForm from '@/components/checkout/DeliveryForm';
@@ -12,7 +13,8 @@ import Footer from '@/components/layout/Footer';
 import Button from '@/components/common/Button';
 
 export default function CheckoutPage() {
-  const { items, totalPrice } = useCart();
+  const router = useRouter();
+  const { items, totalPrice, clearCart } = useCart();
 
   const [email, setEmail] = useState('');
 
@@ -30,6 +32,8 @@ export default function CheckoutPage() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     alert('Payment processed! (Demo)');
+    clearCart();
+    router.push('/');
   }
 
   return (

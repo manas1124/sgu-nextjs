@@ -15,6 +15,23 @@ interface PaymentFormProps {
   onChange: (data: PaymentData) => void;
 }
 
+// "1234567890123456" -> "1234 5678 9012 3456"
+function formatCardNumber(raw: string): string {
+  const digits = raw.replace(/\D/g, '').slice(0, 16);
+  return digits.replace(/(.{4})/g, '$1 ').trim();
+}
+
+// "1225" -> "12/25"
+function formatExpiry(raw: string): string {
+  const digits = raw.replace(/\D/g, '').slice(0, 4);
+  if (digits.length < 3) return digits;
+  return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+}
+
+function formatCvv(raw: string): string {
+  return raw.replace(/\D/g, '').slice(0, 4);
+}
+
 export default function PaymentForm({ data, onChange }: PaymentFormProps) {
   const set = (key: keyof PaymentData) =>
     (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -44,8 +61,14 @@ export default function PaymentForm({ data, onChange }: PaymentFormProps) {
           <div className="flex items-center border border-gray-200 px-3">
             <input
               value={data.cardNumber}
-              onChange={set('cardNumber')}
+              onChange={(e) =>
+                onChange({ ...data, cardNumber: formatCardNumber(e.target.value) })
+              }
               placeholder="Card Number"
+              inputMode="numeric"
+              autoComplete="cc-number"
+              maxLength={19}
+              required
               className="flex-1 py-3 text-sm outline-none bg-transparent placeholder-gray-400"
             />
             <svg className="w-4 h-4 text-gray-400 flex-shrink-0" viewBox="0 0 24 24"
@@ -58,15 +81,27 @@ export default function PaymentForm({ data, onChange }: PaymentFormProps) {
           <div className="grid grid-cols-2 gap-3">
             <Input
               variant="bordered"
-              placeholder="Expiration Date"
+              placeholder="MM/YY"
               value={data.expiry}
-              onChange={set('expiry')}
+              onChange={(e) =>
+                onChange({ ...data, expiry: formatExpiry(e.target.value) })
+              }
+              inputMode="numeric"
+              autoComplete="cc-exp"
+              maxLength={5}
+              required
             />
             <Input
               variant="bordered"
               placeholder="Security Code"
               value={data.cvv}
-              onChange={set('cvv')}
+              onChange={(e) =>
+                onChange({ ...data, cvv: formatCvv(e.target.value) })
+              }
+              inputMode="numeric"
+              autoComplete="cc-csc"
+              maxLength={4}
+              required
             />
           </div>
 
@@ -75,6 +110,8 @@ export default function PaymentForm({ data, onChange }: PaymentFormProps) {
             placeholder="Card Holder Name"
             value={data.cardName}
             onChange={set('cardName')}
+            autoComplete="cc-name"
+            required
           />
         </div>
 
